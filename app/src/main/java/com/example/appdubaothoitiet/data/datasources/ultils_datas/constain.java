@@ -5,4 +5,6 @@ public class constain {
     public static final String KEY="30bcb29684f8ccdb6d67cfbcfb2c451a";
     public static final String TAG="BBB";
     public static final String UNITS="metric";
+    public static final String ID_NOTIFICATION="My Demo";
+    public static final String NAME_NOTIFICATION="Demo";
 }
