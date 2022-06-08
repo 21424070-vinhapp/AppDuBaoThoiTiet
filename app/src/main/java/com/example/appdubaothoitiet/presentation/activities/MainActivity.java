@@ -1,4 +1,4 @@
-package com.example.appdubaothoitiet;
+package com.example.appdubaothoitiet.presentation.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
