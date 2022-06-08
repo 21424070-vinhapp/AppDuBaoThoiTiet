@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:gravity="center"
+        android:width="600dp">
+        <bitmap android:src="@drawable/background" />
+    </item>
+
+    <item android:gravity="center"
+        android:top="100dp">
+        <bitmap android:src="@drawable/house_resize" />
+    </item>
+    <item android:gravity="center"
+        android:top="500dp"
+        android:width="400dp">
+        <bitmap android:src="@drawable/background_rectangle" />
+    </item>
+    <item android:gravity="center"
+        android:top="710dp"
+        android:width="400dp">
+        <bitmap android:src="@drawable/rectangle" />
+    </item>
+
+    <item android:gravity="center"
+        android:top="700dp">
+        <bitmap android:src="@drawable/sub" />
+    </item>
+
+
+</layer-list>
