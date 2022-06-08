@@ -2,6 +2,7 @@ package com.example.appdubaothoitiet.presentation.viewmodel;
 
 import static com.example.appdubaothoitiet.data.datasources.ultils_datas.constain.KEY;
 import static com.example.appdubaothoitiet.data.datasources.ultils_datas.constain.TAG;
+import static com.example.appdubaothoitiet.data.datasources.ultils_datas.constain.UNITS;
 
 import android.util.Log;
 
@@ -43,7 +44,7 @@ public class MainViewModel extends ViewModel {
     //cau lenh lay du lieu thoi tiet khi truyen vao kinh do, vi do
     public void queryFoacastByLocation(Double lat, Double lon)
     {
-        foacastResponsitory.getFocastByLocation(lat,lon,KEY).enqueue(new Callback<Example>() {
+        foacastResponsitory.getFocastByLocation(lat,lon,KEY,UNITS).enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
                 //neu respone co du lieu

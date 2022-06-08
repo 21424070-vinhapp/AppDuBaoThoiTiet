@@ -19,7 +19,7 @@ public class RetrofitClient {
     //tao bien
     private static RetrofitClient instance = null;
     private Retrofit retrofit = null;
-    private final ApiService apiService;
+    private ApiService apiService=null;
 
     //constructor
     private RetrofitClient() {
@@ -44,9 +44,9 @@ public class RetrofitClient {
 
     private Retrofit createRetrofit() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(30, TimeUnit.MILLISECONDS)
-                .writeTimeout(30, TimeUnit.MILLISECONDS)
-                .connectTimeout(30, TimeUnit.MILLISECONDS)
+                .readTimeout(100, TimeUnit.MILLISECONDS)
+                .writeTimeout(100, TimeUnit.MILLISECONDS)
+                .connectTimeout(100, TimeUnit.MILLISECONDS)
                 .protocols(Arrays.asList(Protocol.HTTP_1_1))
                 .build();
 

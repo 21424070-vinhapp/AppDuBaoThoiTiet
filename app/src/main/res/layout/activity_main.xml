@@ -55,7 +55,7 @@
             android:layout_alignStart="@id/txtTrangThai"
             android:text="H:24°"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/txtNhietDoNhoNhat"
@@ -65,7 +65,7 @@
             android:layout_alignEnd="@id/txtTrangThai"
             android:text="L:18°"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <ImageView

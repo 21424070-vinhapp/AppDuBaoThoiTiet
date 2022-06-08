@@ -15,8 +15,8 @@ public class FoacastResponsitory {
         apiService= RetrofitClient.getInstance().getApiService();
     }
 
-    public Call<Example> getFocastByLocation(Double lat,Double lon,String ApiKey)
+    public Call<Example> getFocastByLocation(Double lat,Double lon,String ApiKey,String Units)
     {
-        return apiService.getWeatherInLocation(lat,lon,ApiKey);
+        return apiService.getWeatherInLocation(lat,lon,ApiKey,Units);
     }
 }
