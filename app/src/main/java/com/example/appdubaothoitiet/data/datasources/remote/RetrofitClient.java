@@ -44,9 +44,9 @@ public class RetrofitClient {
 
     private Retrofit createRetrofit() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(100, TimeUnit.MILLISECONDS)
-                .writeTimeout(100, TimeUnit.MILLISECONDS)
-                .connectTimeout(100, TimeUnit.MILLISECONDS)
+                .readTimeout(500, TimeUnit.MILLISECONDS)
+                .writeTimeout(500, TimeUnit.MILLISECONDS)
+                .connectTimeout(500, TimeUnit.MILLISECONDS)
                 .protocols(Arrays.asList(Protocol.HTTP_1_1))
                 .build();
 
