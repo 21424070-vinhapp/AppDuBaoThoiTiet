@@ -19,7 +19,7 @@ public class RetrofitClient {
     //tao bien
     private static RetrofitClient instance = null;
     private Retrofit retrofit = null;
-    private ApiService apiService;
+    private final ApiService apiService;
 
     //constructor
     private RetrofitClient() {

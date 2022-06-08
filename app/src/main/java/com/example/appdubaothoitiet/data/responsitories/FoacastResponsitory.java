@@ -7,6 +7,7 @@ import com.example.appdubaothoitiet.data.models.Example;
 import retrofit2.Call;
 
 public class FoacastResponsitory {
+
     private ApiService apiService;
 
     public FoacastResponsitory()
