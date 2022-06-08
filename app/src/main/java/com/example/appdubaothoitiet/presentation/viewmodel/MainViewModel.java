@@ -22,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainViewModel extends ViewModel {
-    private FoacastResponsitory foacastResponsitory=null;
+    private FoacastResponsitory foacastResponsitory;
     private MutableLiveData<Example> focastData=new MutableLiveData<>();
     private MutableLiveData<String> message=new MutableLiveData<>();
 
