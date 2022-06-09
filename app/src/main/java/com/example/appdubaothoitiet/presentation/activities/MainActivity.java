@@ -28,7 +28,7 @@ import com.example.appdubaothoitiet.databinding.ActivityMainBinding;
 import com.example.appdubaothoitiet.presentation.viewmodel.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
-
+    double mLat, mLon;
     ActivityMainBinding mMainBinding;
     MainViewModel mMainViewModel;
 
@@ -119,13 +119,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         getWeatherForCurrentLocation();
+        Log.d(TAG, "onResume: "+mLat);
     }
 
     private void getWeatherForCurrentLocation() {
-        locationManager= (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationListener=new LocationListener() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
+                mLat=location.getLatitude();
+                mLon=location.getLongitude();
                 mMainViewModel.queryFoacastByLocation(location.getLatitude(), location.getLongitude());
             }
         };
@@ -138,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
             return;
         }
         locationManager.requestLocationUpdates(Location_Provider, MIN_TIME, MIN_DISTANCE, locationListener);
@@ -147,15 +150,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode==REQUEST_CODE)
-        {
-            if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)
-            {
-                Toast.makeText(MainActivity.this,"Locationget Succesffully",Toast.LENGTH_SHORT).show();
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(MainActivity.this, "Locationget Succesffully", Toast.LENGTH_SHORT).show();
                 getWeatherForCurrentLocation();
-            }
-            else
-            {
+            } else {
                 //user denied the permission
             }
         }
@@ -164,8 +163,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(locationManager!=null)
-        {
+        if (locationManager != null) {
             locationManager.removeUpdates(locationListener);
         }
     }
