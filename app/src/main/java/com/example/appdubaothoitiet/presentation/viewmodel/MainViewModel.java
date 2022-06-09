@@ -33,9 +33,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainViewModel extends ViewModel {
-    public static final int DEFAULT_UPDATE_INTERVAL = 30;
-    public static final int FAST_UPDATE_INTERVAL = 5;
-
 
     private FoacastResponsitory foacastResponsitory;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -43,7 +40,8 @@ public class MainViewModel extends ViewModel {
 
     private MutableLiveData<Example> focastData = new MutableLiveData<>();
     private MutableLiveData<String> message = new MutableLiveData<>();
-    private MutableLiveData<Location> mLocation = new MutableLiveData<>();
+    private MutableLiveData<Double> latitude = new MutableLiveData<>();
+    private MutableLiveData<Double> longitude = new MutableLiveData<>();
 
     //constructor
     public MainViewModel(FoacastResponsitory foacastResponsitory) {
@@ -58,12 +56,17 @@ public class MainViewModel extends ViewModel {
         return message;
     }
 
-    public LiveData<Location> getLocation() {
-        return mLocation;
+    public LiveData<Double> getLatitude()
+    {
+        return latitude;
+    }
+
+    public MutableLiveData<Double> getLongitude() {
+        return longitude;
     }
 
     //cau lenh lay du lieu thoi tiet khi truyen vao kinh do, vi do
-    public void queryFoacastByLocation(Double lat, Double lon) {
+    public void queryFoacastByLocation(double lat, double lon) {
         foacastResponsitory.getFocastByLocation(lat, lon, KEY, UNITS).enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
@@ -95,28 +98,14 @@ public class MainViewModel extends ViewModel {
         });
     }
 
-    //cau lenh lay location cua thie bi
-    public void querGetLocation(Context context)
+    public void querySetLattitude(double lat)
     {
-        //set all properties of locationrequest
-        //thiet lap tat ca thuoc tinh cua locationrequest
-        locationRequest = LocationRequest
-                .create()
-                .setInterval(1000 * DEFAULT_UPDATE_INTERVAL) //how often does the default location check occur
-                .setFastestInterval(1000 * FAST_UPDATE_INTERVAL)//how often does the default location check occur when set the most frequent update?
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY);
-
-        fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(context);
-        if(ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
-        {
-            //user provide the permission
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    mLocation.setValue(location);
-                }
-            });
-        }
-
+        latitude.setValue(lat);
     }
+
+    public void querySetLongtitude(double lon)
+    {
+        longitude.setValue(lon);
+    }
+
 }

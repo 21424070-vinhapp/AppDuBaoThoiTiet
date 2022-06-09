@@ -1,6 +1,7 @@
 package com.example.appdubaothoitiet.presentation.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
@@ -11,11 +12,12 @@ import static com.example.appdubaothoitiet.data.datasources.ultils_datas.constai
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -25,29 +27,18 @@ import com.example.appdubaothoitiet.data.responsitories.FoacastResponsitory;
 import com.example.appdubaothoitiet.databinding.ActivityMainBinding;
 import com.example.appdubaothoitiet.presentation.viewmodel.MainViewModel;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.Priority;
-import com.google.android.gms.tasks.OnSuccessListener;
-
-
 public class MainActivity extends AppCompatActivity {
-    private static final int PERMISSIONS_FINE_LOCATION = 99;
+
     ActivityMainBinding mMainBinding;
     MainViewModel mMainViewModel;
-    double mLatitude = 0.0, mLongitude = 0.0;
 
-    //GG API for location, the majority of the app funtion use this class
-    //la api cua gg cho location, phan lon app deu dung class nay
-    FusedLocationProviderClient fusedLocationProviderClient;
+    LocationManager locationManager;
+    LocationListener locationListener;
 
-    //Location request is config file for all setting related to fusedLocationProviderClient
-    //locationRequest là tệp cấu hình cho tất cả cài đặt liên quan đến fusedLocationProviderClient
-    LocationRequest locationRequest;
-
+    final long MIN_TIME = 5000;
+    final float MIN_DISTANCE = 1000;
+    final int REQUEST_CODE = 101;
+    String Location_Provider = LocationManager.GPS_PROVIDER;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
         mMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mMainBinding.getRoot());
-
 
         //create mainViewModel
         mMainViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
@@ -66,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }).get(MainViewModel.class);
 
+        //get focast
         mMainViewModel.getFocastData().observe(this, new Observer<Example>() {
             @Override
             public void onChanged(Example example) {
@@ -73,29 +64,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //get message
         mMainViewModel.getMessage().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 Log.d(TAG, "onChanged: " + s);
             }
         });
-
-        mMainViewModel.getLocation().observe(this, new Observer<Location>() {
-            @Override
-            public void onChanged(Location location) {
-                if (location == null) {
-                    Log.d(TAG, "onChanged: +BUG ");
-                }
-                else
-                {
-                    mLatitude = location.getLatitude();
-                    mLongitude = location.getLongitude();
-                }
-
-            }
-        });
-        mMainViewModel.querGetLocation(MainActivity.this);
-        mMainViewModel.queryFoacastByLocation(mLatitude, mLongitude);
 
     }
 
@@ -140,4 +115,58 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getWeatherForCurrentLocation();
+    }
+
+    private void getWeatherForCurrentLocation() {
+        locationManager= (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationListener=new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                mMainViewModel.queryFoacastByLocation(location.getLatitude(), location.getLongitude());
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
+            return;
+        }
+        locationManager.requestLocationUpdates(Location_Provider, MIN_TIME, MIN_DISTANCE, locationListener);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode==REQUEST_CODE)
+        {
+            if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)
+            {
+                Toast.makeText(MainActivity.this,"Locationget Succesffully",Toast.LENGTH_SHORT).show();
+                getWeatherForCurrentLocation();
+            }
+            else
+            {
+                //user denied the permission
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(locationManager!=null)
+        {
+            locationManager.removeUpdates(locationListener);
+        }
+    }
 }
